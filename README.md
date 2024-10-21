@@ -24,7 +24,7 @@ The key objectives of this project include:
 5. **Customizable Data Simulation**:
     - Advanced data simulation with encryption analysis and visualization tools for assessing encryption methods' performance and impact.
 
-<br> <br>
+<br>
 
 # **Implementation Details**
 
@@ -77,10 +77,10 @@ Here everything is ready to start the application. So, open two tabs in the term
 
 ```
 # Run this command in one tab to start the flask server:
-		python app.py
+    python app.py
 		
 # Run this command in second tab to call and check the execution of the API's
-		python client.py
+	python client.py
 ```
 
 <br>
