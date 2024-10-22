@@ -1,13 +1,13 @@
-import requests
 from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.hmac import HMAC
+from cryptography.hazmat.primitives.ciphers import algorithms, Cipher, modes
+from cryptography.hazmat.backends import default_backend
+import requests
 import base64
 import os
 import time
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 
 # Generate client ECC key pair
@@ -46,17 +46,17 @@ derived_key = HKDF(
 
 # HMAC Generation
 def generate_hmac(key, message):
-    h = HMAC(key, hashes.SHA256(), backend=default_backend())
-    h.update(message.encode())
-    return base64.b64encode(h.finalize()).decode()
+    hmac = HMAC(key, hashes.SHA256(), backend=default_backend())
+    hmac.update(message.encode())
+    return base64.b64encode(hmac.finalize()).decode()
 
 # Encrypt data using AES
 def encrypt_data(key, plaintext):
-    iv = os.urandom(16)
-    cipher = Cipher(algorithms.AES(key), modes.CFB(iv), backend=default_backend())
-    encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(plaintext.encode()) + encryptor.finalize()
-    return base64.b64encode(iv + ciphertext).decode()
+    initialization_vector = os.urandom(16)
+    cipher = Cipher(algorithms.AES(key), modes.CFB(initialization_vector), backend=default_backend())
+    cipher_encryptor = cipher.encryptor()
+    ciphertext = cipher_encryptor.update(plaintext.encode()) + cipher_encryptor.finalize()
+    return base64.b64encode(initialization_vector + ciphertext).decode()
 
 # Step 1: Prepare Data for Encryption and HMAC
 data = "Temperature: 25.5, Humidity: 45.0"
